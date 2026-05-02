@@ -221,6 +221,16 @@ button { font-family: inherit; }
   color: var(--text);
 }
 .nav__brand:hover { color: var(--text); }
+/* Logo image — replaces the old gradient circle + text wordmark */
+.nav__brand-img {
+  height: 32px;
+  width: auto;
+  display: block;
+}
+@media (min-width: 768px) {
+  .nav__brand-img { height: 44px; }
+}
+/* Legacy classes kept for backward compatibility — not currently in DOM */
 .nav__brand-mark {
   width: 22px; height: 22px;
   border-radius: 50%;
@@ -1199,4 +1209,28 @@ button { font-family: inherit; }
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
   }
+}
+
+/* =========================================================
+   DESKTOP-ONLY CONTRAST OVERRIDES (>= 768px)
+   Mobile keeps the original lighter colors (left untouched).
+   These tighten contrast at desktop sizes where text is more
+   prominent and against more whitespace.
+   ========================================================= */
+
+@media (min-width: 768px) {
+  /* Nav menu items — darker resting color, full charcoal on hover */
+  .nav__links { color: #4a4a4a; }
+  .nav__links a {
+    color: #4a4a4a;
+    transition: color 0.2s ease;
+  }
+  .nav__links a:hover { color: #1a1a1a; }
+
+  /* Eyebrow small caps — switch from sage to forest green matching logo */
+  .eyebrow { color: #2d5f3f; }
+
+  /* Hero subhead + trust line — bump from light gray/dim to medium charcoal */
+  .hero__subhead { color: #4a4a4a; }
+  .hero__trust { color: #4a4a4a; }
 }
