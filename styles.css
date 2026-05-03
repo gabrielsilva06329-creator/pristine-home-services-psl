@@ -1234,3 +1234,42 @@ button { font-family: inherit; }
   .hero__subhead { color: #4a4a4a; }
   .hero__trust { color: #4a4a4a; }
 }
+
+/* =========================================================
+   LAPTOP / MEDIUM-DESKTOP RANGE (1024–1439px)
+   Tightens nav at common laptop widths (1280, 1366, 1440)
+   so the logo and links breathe without crowding the right-side
+   phone pill + CTA cluster. Mobile (≤768px) and ≥1440px desktop
+   layouts are intentionally untouched per spec.
+   ========================================================= */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  /* Header gutter: 48px → 32px */
+  .nav__inner {
+    padding-left: 32px;
+    padding-right: 32px;
+    gap: 16px;
+  }
+  /* Logo: 44px → 38px so the wordmark + subtitle baked into the
+     image render smaller and stop encroaching on nav links */
+  .nav__brand-img {
+    height: 38px;
+  }
+  /* Nav links: 28px gap → 22px, slightly smaller type */
+  .nav__links {
+    gap: 22px;
+    font-size: 0.9rem;
+  }
+  /* Right-side cluster: tighter pill + CTA so the action group
+     occupies less width and frees up center space for nav links */
+  .nav__phone {
+    padding: 8px 14px;
+    font-size: 0.84rem;
+  }
+  .nav__cta {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+  }
+  .nav__actions {
+    gap: 8px;
+  }
+}
