@@ -200,31 +200,16 @@
       </div>
     </section>
 
-    <!-- ============ BEFORE / AFTER ============ -->
-    <section class="section demo" id="demo" aria-labelledby="demo-heading">
+    <!-- ============ FAMILY-OWNED BANNER (above pricing) ============ -->
+    <aside class="family-banner" aria-label="Family ownership">
       <div class="container">
-        <header class="section__header">
-          <p class="eyebrow" data-reveal>The difference</p>
-          <h2 id="demo-heading" class="section__title" data-reveal>See it for yourself.</h2>
-          <p class="section__sub" data-reveal>Drag to reveal the before and after.</p>
-        </header>
-
-        <div class="ba" data-reveal>
-          <div class="ba__stage" id="ba-stage" style="--reveal: 50%;">
-            <video class="ba__video ba__video--before" src="DirtyRoom.mp4" muted playsinline preload="auto" aria-label="Room before cleaning"></video>
-            <div class="ba__top">
-              <video class="ba__video ba__video--after" src="DirtyRoom.mp4" muted playsinline preload="auto" aria-label="Room after cleaning"></video>
-            </div>
-            <button type="button" class="ba__handle" id="ba-handle" aria-label="Drag to reveal before and after">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6M9 6l-6 6 6 6" transform="translate(3 0)"/></svg>
-            </button>
-            <span class="ba__label ba__label--left">Before</span>
-            <span class="ba__label ba__label--right">After</span>
-          </div>
-          <p class="ba__caption">Before. After. Same room.</p>
-        </div>
+        <p class="family-banner__line" data-reveal>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+          <span class="family-banner__label">Family-Owned &amp; Operated in Port Saint Lucie</span>
+          <a href="#family" class="family-banner__link">Meet our team <span aria-hidden="true">↓</span></a>
+        </p>
       </div>
-    </section>
+    </aside>
 
     <!-- ============ PRICING ============ -->
     <section class="section pricing" id="pricing" aria-labelledby="pricing-heading">
@@ -437,20 +422,46 @@
 
         <div class="family__grid">
           <article class="team" data-reveal>
-            <div class="team__photo team__photo--placeholder" role="img" aria-label="Cleaning team photo coming soon">
-              <span>Photo coming soon</span>
+            <div class="team__photo-frame">
+              <img class="team__photo" src="images/cleaning-team.jpg" alt="The Pristine cleaning team led by Lourdes and Carlos" loading="lazy" onerror="this.parentElement.classList.add('team__photo-frame--placeholder');this.remove();" />
             </div>
             <h3 class="team__name">Cleaning Team</h3>
-            <p class="team__caption">Led by Lourdes and (grandpa name), our cleaning team brings decades of experience and a personal touch to every home. They're the heart of Pristine.</p>
+            <p class="team__caption">Led by Lourdes and Carlos, our cleaning team brings decades of experience and a personal touch to every home. They're the heart of Pristine.</p>
           </article>
 
           <article class="team" data-reveal>
-            <div class="team__photo team__photo--placeholder" role="img" aria-label="Pressure washing team photo coming soon">
-              <span>Photo coming soon</span>
+            <div class="team__photo-frame">
+              <img class="team__photo" src="images/pressure-team.jpg" alt="The Pristine pressure washing crew led by Nathalie and Allen — the Kumo Crew" loading="lazy" onerror="this.parentElement.classList.add('team__photo-frame--placeholder');this.remove();" />
             </div>
             <h3 class="team__name">Pressure Washing Team <span class="team__alias">(Kumo Crew)</span></h3>
-            <p class="team__caption">Led by (sister name) and (boyfriend name), our pressure washing crew specializes in soft wash and exterior restoration. They call themselves the Kumo Crew — <em>kumo</em> means cloud in Japanese, fitting for the water-powered work they do.</p>
+            <p class="team__caption">Led by Nathalie and Allen, our pressure washing crew specializes in soft wash and exterior restoration. They call themselves the Kumo Crew — <em>kumo</em> means cloud in Japanese, fitting for the water-powered work they do.</p>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BEFORE / AFTER ============ -->
+    <section class="section demo" id="demo" aria-labelledby="demo-heading">
+      <div class="container">
+        <header class="section__header">
+          <p class="eyebrow" data-reveal>The difference</p>
+          <h2 id="demo-heading" class="section__title" data-reveal>See it for yourself.</h2>
+          <p class="section__sub" data-reveal>Drag to reveal the before and after.</p>
+        </header>
+
+        <div class="ba" data-reveal>
+          <div class="ba__stage" id="ba-stage" style="--reveal: 50%;">
+            <video class="ba__video ba__video--before" src="DirtyRoom.mp4" muted playsinline preload="auto" aria-label="Room before cleaning"></video>
+            <div class="ba__top">
+              <video class="ba__video ba__video--after" src="DirtyRoom.mp4" muted playsinline preload="auto" aria-label="Room after cleaning"></video>
+            </div>
+            <button type="button" class="ba__handle" id="ba-handle" aria-label="Drag to reveal before and after">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6M9 6l-6 6 6 6" transform="translate(3 0)"/></svg>
+            </button>
+            <span class="ba__label ba__label--left">Before</span>
+            <span class="ba__label ba__label--right">After</span>
+          </div>
+          <p class="ba__caption">Before. After. Same room.</p>
         </div>
       </div>
     </section>
