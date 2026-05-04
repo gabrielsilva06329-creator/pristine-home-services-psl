@@ -435,7 +435,7 @@ if (!window.location.hash) window.scrollTo(0, 0);
               <p>We'll get back within 1 business day. For urgent requests, call <a href="tel:7722370782">772-237-0782</a>.</p>
             </div>`;
         } else {
-          // Likely the placeholder Formspree URL (404). Fail gracefully.
+          // Formspree returned non-200 (rate limit, validation, or outage). Fail gracefully.
           status.textContent = 'Something went wrong. Please call 772-237-0782 or email PristineHomePSL@gmail.com.';
           status.classList.add('is-error');
           submitBtn.disabled = false;
