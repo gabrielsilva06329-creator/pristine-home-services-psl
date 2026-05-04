@@ -445,7 +445,23 @@ button { font-family: inherit; }
     background: radial-gradient(ellipse at 70% center, transparent 35%, rgba(250, 250, 250, 0.45) 100%);
     pointer-events: none;
   }
-  .hero__fade-left { display: block; background: none; }
+  /* Hero left scrim (1C) — soft white-to-transparent so the text panel
+     reads cleanly even where the video's mask gradient overlaps it.
+     Sits OVER the video edge but UNDER the hero text (z-index: 1).
+     The scrim covers the full hero (inset: 0) but is only visible on
+     the left ~50% via the gradient. */
+  .hero__fade-left {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to right,
+      rgba(250, 250, 250, 0.95) 0%,
+      rgba(250, 250, 250, 0.92) 25%,
+      rgba(250, 250, 250, 0.55) 38%,
+      transparent 50%);
+  }
   .hero__fade-bottom {
     background: linear-gradient(to bottom, transparent 55%, var(--bg) 100%);
   }
@@ -1219,13 +1235,14 @@ button { font-family: inherit; }
    ========================================================= */
 
 @media (min-width: 768px) {
-  /* Nav menu items — darker resting color, full charcoal on hover */
-  .nav__links { color: #4a4a4a; }
+  /* Nav menu items — brand forest green for WCAG AA contrast on white */
+  .nav__links { color: #2d5a3d; }
   .nav__links a {
-    color: #4a4a4a;
+    color: #2d5a3d;
+    font-weight: 500;
     transition: color 0.2s ease;
   }
-  .nav__links a:hover { color: #1a1a1a; }
+  .nav__links a:hover { color: #1a4730; }
 
   /* Eyebrow small caps — switch from sage to forest green matching logo */
   .eyebrow { color: #2d5f3f; }
@@ -1234,6 +1251,12 @@ button { font-family: inherit; }
   .hero__subhead { color: #4a4a4a; }
   .hero__trust { color: #4a4a4a; }
 }
+
+/* Mobile menu links — match desktop forest green for consistent brand
+   contrast (mobile menu opens on white, same readability concern). */
+.mobile-menu__links a { color: #2d5a3d; font-weight: 500; }
+.mobile-menu__links a:hover { color: #1a4730; }
+.mobile-menu__phone { color: #2d5a3d; }
 
 /* =========================================================
    LAPTOP / MEDIUM-DESKTOP RANGE (1024–1439px)
@@ -1272,4 +1295,151 @@ button { font-family: inherit; }
   .nav__actions {
     gap: 8px;
   }
+}
+
+/* =========================================================
+   PRESSURE WASHING — 5-card responsive grid
+   Uses auto-fit so the row breaks naturally: 5 cols on wide
+   desktops, 3 cols on standard laptops (5 wraps to 3+2), 2
+   cols on tablets, 1 col stacked on mobile.
+   ========================================================= */
+
+.pressure__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+@media (min-width: 540px) {
+  .pressure__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 800px) {
+  .pressure__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1280px) {
+  .pressure__grid { grid-template-columns: repeat(5, 1fr); }
+  .pressure__grid .card { padding: 28px 22px; }
+  .pressure__grid .card__name { font-size: 1.1rem; }
+  .pressure__grid .card__price { font-size: 2.4rem; }
+  .pressure__grid .card__list { gap: 8px; }
+  .pressure__grid .card__list li { font-size: 0.88rem; }
+}
+
+/* =========================================================
+   BUNDLE & SAVE — 3-card grid + savings badge variant
+   ========================================================= */
+
+.bundles__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 22px;
+}
+@media (min-width: 800px) {
+  .bundles__grid { grid-template-columns: repeat(3, 1fr); align-items: stretch; }
+}
+
+/* Bundle cards lift slightly more than standard pricing cards
+   to draw the eye and signal "this is the better deal". */
+.card--bundle {
+  border-color: var(--rule-strong);
+  box-shadow: var(--shadow-md);
+}
+.card--bundle:hover {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 0 1px var(--accent),
+    0 32px 70px -28px rgba(63, 138, 102, 0.32);
+}
+
+/* Savings badge — a secondary badge variant in the warm clay tone
+   to differentiate from the primary "Most popular" / "Best value"
+   forest-green badges. Same shape, different color signal. */
+.card__badge--save {
+  background: var(--accent-warm);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(176, 122, 74, 0.30);
+}
+
+/* Smaller price treatment for non-dollar prices like "15% off" */
+.card__price--sm {
+  font-size: 2.2rem;
+}
+
+/* =========================================================
+   MEET THE FAMILY — 2-card team grid + photo placeholder
+   ========================================================= */
+
+.family__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 36px;
+}
+@media (min-width: 800px) {
+  .family__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Square-ish photo block. When real photos are added the user can
+   replace the .team__photo div with an <img class="team__photo"> tag
+   and the placeholder modifier below stops applying. */
+.team__photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow-sm);
+  object-fit: cover;
+  object-position: center;
+}
+
+.team__photo--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.025) 0 12px,
+      transparent 12px 24px),
+    var(--surface);
+  color: var(--text-dim);
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.team__name {
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 500;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  margin: 4px 0 0;
+  color: var(--text);
+}
+.team__alias {
+  color: var(--accent-strong);
+  font-weight: 400;
+  font-style: italic;
+  margin-left: 6px;
+  font-size: 0.85em;
+}
+.team__caption {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 56ch;
+}
+.team__caption em {
+  color: var(--accent-strong);
+  font-style: italic;
 }

@@ -13,9 +13,26 @@
 // Without this, reloading while scrolled past the hero would cause
 // ScrollTrigger to bake in the end-state and hide the video.
 // Exception: respect explicit deep-links (#pricing, #faq, etc.) so users
-// landing on a section anchor still arrive there.
+// landing on a section anchor still arrive there. We re-scroll on
+// DOMContentLoaded because manual scroll restoration ALSO disables the
+// browser's default hash-target scroll, which we need to re-implement.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-if (!window.location.hash) window.scrollTo(0, 0);
+if (window.location.hash) {
+  const scrollToHash = () => {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      const top = target.getBoundingClientRect().top + window.scrollY - 60;
+      window.scrollTo(0, top);
+    }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scrollToHash);
+  } else {
+    scrollToHash();
+  }
+} else {
+  window.scrollTo(0, 0);
+}
 
 (() => {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
