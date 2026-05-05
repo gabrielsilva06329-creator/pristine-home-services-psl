@@ -467,6 +467,45 @@ if (window.location.hash) {
     });
   }
 
+  /* ---------- Hero bulletproofing on window.load ----------
+     Repro of the bug this fixes:
+       1. Scroll to bottom of page
+       2. Hit refresh — Chrome restores scroll to bottom even with
+          history.scrollRestoration = "manual" (race condition)
+       3. ScrollTrigger initializes against the stale scroll position,
+          calculates the hero scrub at progress 1, and bakes the END
+          state (opacity 0) into .hero__content
+       4. playHero() animates the [data-anim="hero"] children to opacity 1,
+          but the PARENT .hero__content is at 0, so they stay invisible
+       5. Scrolling back up doesn't always recover because the scrub tween
+          may be stuck on a stale layout snapshot
+
+     Two-layer fix on window.load (after fonts/images/layout settle):
+       - ScrollTrigger.refresh() re-measures every trigger against the real
+         current scroll position, fixing any stale calculations.
+       - If scroll is near the top (hero in viewport), explicitly force
+         hero elements to their fully-visible state, overriding any baked
+         scrub end state. Safe because if user IS scrolled past hero,
+         this branch is skipped and ScrollTrigger keeps full control.
+  */
+  function bulletproofHero() {
+    if (window.ScrollTrigger) ScrollTrigger.refresh();
+    if (window.scrollY < 50) {
+      document.querySelectorAll('[data-anim="hero"]').forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      if (hasGSAP) {
+        const heroContent = document.querySelector('.hero__content');
+        const heroVideo = document.querySelector('.hero__video');
+        const heroFadeBottom = document.querySelector('.hero__fade-bottom');
+        if (heroContent) gsap.set(heroContent, { opacity: 1, y: 0 });
+        if (heroVideo) gsap.set(heroVideo, { opacity: 1, scale: 1 });
+        if (heroFadeBottom) gsap.set(heroFadeBottom, { opacity: 1 });
+      }
+    }
+  }
+
   /* ---------- Boot ---------- */
   function boot() {
     wireNav();
@@ -484,5 +523,11 @@ if (window.location.hash) {
     document.addEventListener('DOMContentLoaded', boot);
   } else {
     boot();
+  }
+
+  if (document.readyState === 'complete') {
+    bulletproofHero();
+  } else {
+    window.addEventListener('load', bulletproofHero);
   }
 })();
