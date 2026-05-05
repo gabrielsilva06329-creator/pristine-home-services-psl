@@ -221,14 +221,18 @@ button { font-family: inherit; }
   color: var(--text);
 }
 .nav__brand:hover { color: var(--text); }
-/* Logo image — replaces the old gradient circle + text wordmark */
+/* Logo image — branded circular badge.
+   Mobile (untouched per spec): 32px tall.
+   Desktop ≥768: 56px tall (~100px wide at 1.78 ratio).
+   Laptop range 1024-1439 narrows to 48px to avoid crowding nav links;
+   override lives in the laptop media query block at end of file. */
 .nav__brand-img {
   height: 32px;
   width: auto;
   display: block;
 }
 @media (min-width: 768px) {
-  .nav__brand-img { height: 44px; }
+  .nav__brand-img { height: 56px; }
 }
 /* Legacy classes kept for backward compatibility — not currently in DOM */
 .nav__brand-mark {
@@ -1272,10 +1276,10 @@ button { font-family: inherit; }
     padding-right: 32px;
     gap: 16px;
   }
-  /* Logo: 44px → 38px so the wordmark + subtitle baked into the
-     image render smaller and stop encroaching on nav links */
+  /* Logo at common laptop widths: 56px → 48px to leave breathing
+     room for the nav links between brand and right-side cluster */
   .nav__brand-img {
-    height: 38px;
+    height: 48px;
   }
   /* Nav links: 28px gap → 22px, slightly smaller type */
   .nav__links {
