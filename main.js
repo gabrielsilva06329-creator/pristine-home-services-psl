@@ -9,29 +9,43 @@
    ========================================================= */
 
 // Always load the page at the top so the hero scroll-linked dissolve
-// initializes from its start state (video visible, opacity 1).
-// Without this, reloading while scrolled past the hero would cause
-// ScrollTrigger to bake in the end-state and hide the video.
-// Exception: respect explicit deep-links (#pricing, #faq, etc.) so users
-// landing on a section anchor still arrive there. We re-scroll on
-// DOMContentLoaded because manual scroll restoration ALSO disables the
-// browser's default hash-target scroll, which we need to re-implement.
+// initializes from its start state (video visible, opacity 1) and so we
+// can deterministically scroll to a hash anchor AFTER images/fonts settle.
+//
+// Hash anchor first-load bug we're fixing here:
+// External link arrives at /#contact. Browser parses HTML, immediately
+// jumps to #contact's CURRENT y-offset, then images load and shift the
+// page height — user lands halfway up. Refresh "fixes" it because images
+// are already cached on second load.
+//
+// Fix: force scroll to (0,0), defer the actual hash scroll until
+// window.load (after images/fonts are fully laid out), then scroll with
+// a dynamic header offset so the section header doesn't sit under the
+// fixed nav.
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+
 if (window.location.hash) {
-  const scrollToHash = () => {
-    const target = document.querySelector(window.location.hash);
-    if (target) {
-      const top = target.getBoundingClientRect().top + window.scrollY - 60;
-      window.scrollTo(0, top);
-    }
+  const targetHash = window.location.hash;
+
+  const scrollToHashTarget = () => {
+    let target;
+    try { target = document.querySelector(targetHash); } catch (e) { return; }
+    if (!target) return;
+    const nav = document.getElementById('nav');
+    const headerOffset = nav ? nav.offsetHeight + 20 : 100;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scrollToHash);
+
+  // window.load fires AFTER images/fonts have laid out — by which point
+  // section positions are stable. Small setTimeout gives any synchronous
+  // post-load layout (e.g. ScrollTrigger.refresh in bulletproofHero) a tick.
+  if (document.readyState === 'complete') {
+    setTimeout(scrollToHashTarget, 100);
   } else {
-    scrollToHash();
+    window.addEventListener('load', () => setTimeout(scrollToHashTarget, 100));
   }
-} else {
-  window.scrollTo(0, 0);
 }
 
 (() => {
@@ -42,18 +56,41 @@ if (window.location.hash) {
     gsap.registerPlugin(ScrollTrigger);
   }
 
-  /* ---------- Anchor jumps use native smooth scroll ---------- */
+  /* ---------- Header offset helper ---------- */
+  function getHeaderOffset() {
+    const nav = document.getElementById('nav');
+    return nav ? nav.offsetHeight + 20 : 100;
+  }
+  function scrollToHashWithOffset(hash, smooth) {
+    if (!hash || hash === '#') return;
+    let target;
+    try { target = document.querySelector(hash); } catch (e) { return; }
+    if (!target) return;
+    const top = target.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+    window.scrollTo({ top, behavior: (smooth && !reduceMotion) ? 'smooth' : 'auto' });
+  }
+
+  /* ---------- Anchor click → smooth scroll + pushState URL update ---------- */
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-    const id = a.getAttribute('href').slice(1);
-    if (!id) return;
-    const target = document.getElementById(id);
-    if (!target) return;
+    const hash = a.getAttribute('href');
+    if (!hash || hash === '#') return;
+    const id = hash.slice(1);
+    if (!document.getElementById(id)) return;
     e.preventDefault();
-    const top = target.getBoundingClientRect().top + window.scrollY - 60;
-    window.scrollTo({ top, behavior: reduceMotion ? 'auto' : 'smooth' });
+    scrollToHashWithOffset(hash, true);
+    // Reflect the anchor in the URL bar without re-triggering the browser's
+    // default jump (which scrollToHashWithOffset above already handled).
+    if (window.location.hash !== hash) {
+      history.pushState(null, '', hash);
+    }
     closeMobileMenu();
+  });
+
+  /* ---------- Back/forward nav between anchors ---------- */
+  window.addEventListener('hashchange', () => {
+    scrollToHashWithOffset(window.location.hash, true);
   });
 
   /* ---------- Hero entrance ---------- */

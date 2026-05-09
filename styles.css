@@ -62,7 +62,17 @@ html, body {
   text-rendering: optimizeLegibility;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* Anchor-link offset for the fixed nav. Matches the +20 buffer used
+     by getHeaderOffset() in main.js so JS-driven and CSS-driven scrolls
+     land at the same position. */
+  scroll-padding-top: 100px;
+}
+/* Ensures any element targeted by a fragment anchor leaves room for the
+   fixed nav above it, regardless of how it was scrolled into view
+   (CSS smooth-scroll, scrollIntoView, browser back/forward). */
+[id] { scroll-margin-top: 100px; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
